@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import Modal from 'react-responsive-modal';
-import { RadioButton, RadioButtonGroup, MenuItem, RaisedButton } from 'material-ui';
-import DatePicker from 'material-ui/DatePicker';
+import IconButton from '@material-ui/core/IconButton';
+import Add from '@material-ui/icons/Add';
+import Modal from '@material-ui/core/Modal';
+import { Radio, RadioGroup, MenuItem, Button, Typography, FormControlLabel, Paper } from '@material-ui/core';
 import { ValidatorForm } from 'react-form-validator-core';
 import { TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import { Row } from 'react-flexbox-grid';
 import { API_ROOT } from './config.js';
 import CategoryForm from './CategoryForm.js';
+import Dialog from '@material-ui/core/Dialog';
 
 
 export default class BudgetItemForm extends Component {
@@ -125,7 +125,7 @@ export default class BudgetItemForm extends Component {
 		(this.state.expense_category_options.map((option) => {
 			return (<MenuItem key={option.id} value={option.id} primaryText={option.name} />);
 		}));
-		options.push(<MenuItem key={-1} value={-1} primaryText="Add New Category" leftIcon={<ContentAdd />} onClick={this.addNewCategory} />		
+		options.push(<MenuItem key={-1} value={-1} primaryText="Add New Category" leftIcon={<Add />} onClick={this.addNewCategory} />		
 					);
 		return options;
 	}
@@ -150,38 +150,50 @@ export default class BudgetItemForm extends Component {
 		this.setState({category:val});
 	}
 
+
 	render() {
+
+		const modalStyle = {
+
+		}
+
+		const paperStyle = {
+			width: '400',
+		}
+
 		return (
-			<div>
+			<div style={{verticalAlign:"middle"}}>
 				<Modal open={this.state.open_category_modal} onClose={this.closeCategoryModal} little>
 					<CategoryForm type={this.state.type} close={this.closeCategoryModal} update={this.props.updateCategories} setCategory={this.setCategory} />
 				</Modal>
-				<FloatingActionButton onClick={this.openBudgetItemModal} style={{ margin:25 }}>
-					<ContentAdd />
-				</FloatingActionButton>
-				<Modal open={this.state.open_budget_item_modal} onClose={this.closeBudgetItemModal} little>
+				<Button style={{position: "fixed", marginTop:30, bottom: 50, right: 50}} onClick={this.openBudgetItemModal} variant="fab" color="secondary">
+					<Add />
+				</Button>
+				<Dialog open={this.state.open_budget_item_modal} onClose={this.closeBudgetItemModal} style={modalStyle}>
+				<Paper style={paperStyle}>
 					<ValidatorForm
 						ref="form"
 						onSubmit={this.handleSubmit}
 						onError={errors => console.log(errors)}
+
 					>
 						<Row>
 							<h4>New Budget Item</h4>
 						</Row>
 						<Row>
-							<RadioButtonGroup name="budget_item_type" defaultSelected="expense" onChange={this.handleChange('type')}>
-								<RadioButton name="income" value="income" label="Income" />
-								<RadioButton name="expense" value="expense" label="Expense" />
-							</RadioButtonGroup>
+							<RadioGroup name="budget_item_type" value={this.state.type} onChange={this.handleChange('type')}>
+								<FormControlLabel label="Income" name="income" value="income" labelPlacement="start" control={<Radio/>} />
+								<FormControlLabel label="Income" name="income" value="income" labelPlacement="start" control={<Radio/>} />
+							</RadioGroup>
 						</Row>
 						<Row>
-							<DatePicker
+							{/* <DatePicker
 								hintText="Date"
 								name="time"
 								value={this.state.time}
 								onChange={this.handleChange('time')}
 								formatDate={this.formatDate}
-							/>
+							/> */}
 						</Row>
 						<Row>
 							<TextValidator
@@ -226,10 +238,11 @@ export default class BudgetItemForm extends Component {
 			                </SelectValidator>
 		                </Row>
 		                <Row end="xs">
-		                	<RaisedButton type="Save" label="Submit" primary={true} />
+		                	<Button type="Save" label="Submit" primary={true} />
 		                </Row>
 					</ValidatorForm>
-				</Modal>
+					</Paper>
+				</Dialog>
 			</div>
 		);
 	}

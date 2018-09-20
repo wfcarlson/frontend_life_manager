@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import { ValidatorForm } from 'react-form-validator-core';
 import { TextValidator } from 'react-material-ui-form-validator';
 import { API_ROOT } from './config.js';
@@ -79,7 +79,7 @@ export default class CategoryForm extends Component {
                     </ValidatorForm>
                 </Row>
                 <Row end="xs">
-		            <RaisedButton onClick={this.handleClickSave} label="Submit" primary={true} />
+		            <Button onClick={this.handleClickSave} label="Submit" primary={true} />
 		        </Row>
             </Col>
         );

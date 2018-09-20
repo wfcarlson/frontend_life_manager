@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import {
-	Table,
-	TableBody,
-	TableHeader,
-	TableHeaderColumn,
-	TableRow,
-	TableRowColumn,
-} from 'material-ui/Table';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 import { API_ROOT } from './config.js';
-import IconButton from 'material-ui/IconButton';
-import ContentClear from 'material-ui/svg-icons/content/clear';
+import IconButton from '@material-ui/core/IconButton';
+import Delete from '@material-ui/icons/Delete';
 import Modal from 'react-responsive-modal';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 export default class BudgetItemList extends Component {
 
@@ -83,26 +80,26 @@ export default class BudgetItemList extends Component {
 
 			return (
 				<TableRow key={ budget_item.id }>
-					<TableRowColumn>
+					<TableCell>
 						{ month }/{ date.getDate() }/{ date.getYear() }
-					</TableRowColumn>
-					<TableRowColumn>
+					</TableCell>
+					<TableCell>
 						{ budget_item.description }
-					</TableRowColumn>
-					<TableRowColumn>
+					</TableCell>
+					<TableCell>
 						{ budget_item.party }
-					</TableRowColumn>
-					<TableRowColumn>
+					</TableCell>
+					<TableCell>
 						${ budget_item.amount }
-					</TableRowColumn>
-					<TableRowColumn>
+					</TableCell>
+					<TableCell>
 						{ this.getCategoryOption(budget_item.category) }
-					</TableRowColumn>
-					<TableRowColumn>
+					</TableCell>
+					<TableCell>
 						<IconButton onClick={this.handleClickDelete(budget_item)}>
-							<ContentClear hoverColor="red"/>
+							<Delete hoverColor="red"/>
 						</IconButton>
-					</TableRowColumn>
+					</TableCell>
 				</TableRow>
 			);
 		});
@@ -113,23 +110,23 @@ export default class BudgetItemList extends Component {
 			<div>
 				<Modal open={this.state.open_modal} onClose={this.closeModal} little>
 					<p>Delete {this.state.budget_item.description} - ${this.state.budget_item.amount}</p>
-					<RaisedButton label="Confirm" primary={true} onClick={this.onClickConfirm} />
+					<Button label="Confirm" primary={true} onClick={this.onClickConfirm} />
 					&nbsp;&nbsp;&nbsp; 
-					<RaisedButton label="Cancel" secondary={true} onClick={this.closeModal} />
+					<Button label="Cancel" secondary={true} onClick={this.closeModal} />
 				</Modal>
 				<h3>{this.props.title}</h3>
 				<Table fixedHeader={true}>
 					
-					<TableHeader displaySelectAll={false} adjustForCheckbox={false} >
+					<TableHead displaySelectAll={false} adjustForCheckbox={false} >
 						<TableRow>
-							<TableHeaderColumn>Date</TableHeaderColumn>
-					        <TableHeaderColumn>Description</TableHeaderColumn>
-					        <TableHeaderColumn>Vendor</TableHeaderColumn>
-					        <TableHeaderColumn>Amount</TableHeaderColumn>
-					        <TableHeaderColumn>Category</TableHeaderColumn>
-					        <TableHeaderColumn></TableHeaderColumn>
+							<TableCell>Date</TableCell>
+					        <TableCell>Description</TableCell>
+					        <TableCell>Vendor</TableCell>
+					        <TableCell>Amount</TableCell>
+					        <TableCell>Category</TableCell>
+					        <TableCell></TableCell>
 				        </TableRow>
-					</TableHeader>
+					</TableHead>
 					<TableBody displayRowCheckbox={false}>
 						{ this.renderRows() }
 					</TableBody>

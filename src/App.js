@@ -2,19 +2,18 @@ import React, { Component } from 'react';
 import BudgetItemForm from './BudgetItemForm.js';
 import BudgetItemList from './BudgetItemList.js';
 import TotalsView from './TotalsView.js';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-import AppBar from 'material-ui/AppBar';
+import AppBar from '@material-ui/core/AppBar';
 import { API_ROOT } from './config.js';
 import MonthNavigation from './MonthNavigation.js';
 import './App.css';
 import { getMonthString } from './utils.js';
+import IconButton from '@material-ui/core/IconButton';
+import AccountBalance from '@material-ui/icons/AccountBalance';
+import CloudDownload from '@material-ui/icons/CloudDownload';
+import Typography from '@material-ui/core/Typography';
+import { Toolbar } from '@material-ui/core';
 
-
-const barStyle = {
-	position: 'fixed',
-	top: 0
-};
 
 class App extends Component {
 
@@ -120,6 +119,10 @@ class App extends Component {
 		}, () => { this.update() })
 	}
 
+	handleMenu = () => {
+
+	}
+
 	render() {
 		var title = "Monthly Budget - " + getMonthString(this.state.date.getMonth());
 		if (new Date().getFullYear() > this.state.date.getFullYear()) {
@@ -128,57 +131,68 @@ class App extends Component {
 
 		return (
 			<div className="App">
-				<MuiThemeProvider>
-					<div>
-						<AppBar
-							showMenuIconButton={false} 
-							title={title}
-							style={barStyle}
-						/>
-						<Grid style={{ paddingTop: 75 }} fluid>
-							<Row>
-								<Col lg={1} xs={12}>
-									<BudgetItemForm 
-										income_category_options={ this.state.income_category_options }
-										expense_category_options={ this.state.expense_category_options }
-										update={ this.update }
-										updateCategories={ this.updateCategories }
-									/>
-								</Col>
-								<Col lg={11} xs={12}>
-									<TotalsView 
-										income_category_options={ this.state.income_category_options }
-										expense_category_options={ this.state.expense_category_options }
-										date={ this.state.date }
-									/>
-								</Col>
-							</Row>
-							<Row center="xs">
-								<BudgetItemList
-									title="Incomes"
-									type="income"
-									category_options={ this.state.income_category_options }
-									budget_items={ this.state.incomes }
-									update={ this.update }
+					<AppBar
+						position='fixed'
+						color='primary'
+					>
+						<Toolbar>
+							<Typography variant="display2" color="inherit" style={{flexGrow: 1, fontWeight: 'bold'}}>
+								{ title }
+							</Typography>
+							<IconButton
+								onClick={this.handleMenu}
+								color='inherit'
+							>
+								<AccountBalance />
+							</IconButton>
+							<IconButton
+								onClick={this.handleMenu}
+								color='inherit'
+							>
+								<CloudDownload />
+							</IconButton>
+						</Toolbar>
+					</AppBar>
+					<Grid style={{ paddingTop: 75 }} fluid>
+						<Row>
+							<Col xs={12}>
+								<TotalsView 
+									income_category_options={ this.state.income_category_options }
+									expense_category_options={ this.state.expense_category_options }
+									date={ this.state.date }
 								/>
-							</Row>
-							<Row center="xs"  style={{paddingTop:50}}>
-								<BudgetItemList
-									title="Expenses"
-									type="expense"
-									category_options={ this.state.expense_category_options }
-									budget_items={ this.state.expenses }
-									update={ this.update }	
-								/>
-							</Row>
-							<Row center="xs"  style={{paddingTop:50}}>
-								<MonthNavigation setDate={this.setDate} selected_date={new Date(this.state.date.getTime())} start_date={new Date(this.state.start_date.getTime())}/>
-							</Row>
-						</Grid>
-					</div>
-				</MuiThemeProvider>
+							</Col>
+						</Row>
+						<Row center="xs">
+							<BudgetItemList
+								title="Incomes"
+								type="income"
+								category_options={ this.state.income_category_options }
+								budget_items={ this.state.incomes }
+								update={ this.update }
+								style={{paddingTop: '50px'}}
+							/>
+						</Row>
+						<Row center="xs"  style={{paddingTop:50}}>
+							<BudgetItemList
+								title="Expenses"
+								type="expense"
+								category_options={ this.state.expense_category_options }
+								budget_items={ this.state.expenses }
+								update={ this.update }	
+							/>
+						</Row>
+							<BudgetItemForm 
+								income_category_options={ this.state.income_category_options }
+								expense_category_options={ this.state.expense_category_options }
+								update={ this.update }
+								updateCategories={ this.updateCategories }
+							/>
+						<Row center="xs"  style={{paddingTop:50}}>
+							<MonthNavigation setDate={this.setDate} selected_date={new Date(this.state.date.getTime())} start_date={new Date(this.state.start_date.getTime())}/>
+						</Row>
+					</Grid>
 			</div>
-
 		);
 	}
 }

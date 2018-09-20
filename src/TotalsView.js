@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import Paper from 'material-ui/Paper';
 import { Col, Row } from 'react-flexbox-grid';
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
-import { List, ListItem } from 'material-ui/List';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Card from '@material-ui/core/Card';
 import { API_ROOT } from './config.js';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import { Typography, ListItemText } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 export default class TotalsView extends Component {
     
@@ -68,12 +73,17 @@ export default class TotalsView extends Component {
     }
 
     renderCategoryTotals = (categories) => {
-        var keys = this.sortCategoryKeys(categories);
-
+        var keys = Object.keys(categories);
         return keys.map((key) => {
-            if (categories[key]) {
-                return <ListItem primaryText={key} secondaryText={this.formatMoney(categories[key])} />;
-            }
+            return  <ListItem divider={true}>
+                        <ListItemText 
+                            inset primary={key} 
+                            primaryTypographyProps={{variant: "headline"}} 
+                            secondary={this.formatMoney(categories[key])}
+                            secondaryTypographyProps={{variant: "display1"}}
+                        >
+                        </ListItemText>
+                    </ListItem>;
         });
     }
 
@@ -90,11 +100,15 @@ export default class TotalsView extends Component {
     }
     
     render() {
-        
+        const { classes } = this.props;
+
         const style = {
+            paddingTop: '50px',
             textAlign: 'center',
             display: 'inline-block',
-            width:'100%'
+            width: '100%',
+            fontSize: 16,
+            fontWeight: 'bold'
         };
 
         var net_style = {
@@ -113,50 +127,48 @@ export default class TotalsView extends Component {
         }
 
         return (
-            <Paper
+            <Card
                 style={style}
-                zDepth={2}
+                elevation="12"
             >
-                <Row xs="center" lg="center">
-                    <Col xs={4} lg={2}>
+                <Row xs="center">
+                    <Col xs={12} sm={4}>
                         <p>Net</p>
                         <p style={net_style}>{this.formatMoney(this.state.data.net)}</p>
                     </Col>
-                    <Col xs={4} lg={2}>
+                    <Col xs={12} sm={4}>
                         <p>Total Income</p>
                         <p>{this.formatMoney(this.state.data.total_income)}</p>
                     </Col>
-                    <Col xs={4} lg={2}>
+                    <Col xs={12} sm={4}>
                         <p>Total Expenses</p>
                         <p>{this.formatMoney(this.state.data.total_expense)}</p>
                     </Col>
                 </Row>
-                <Row>
-                    <Col lg={8}>
-                        <RaisedButton label="category totals" onClick={this.clickOpen} style={{marginBottom:10}}/>
-                        <Dialog 
-                            title="Category Totals"
-                            open={this.state.collapse}
-                            onRequestClose={this.close}
-                        >
-                            <Row>
-                                <Col xs={6} lg={4}>
-                                    <h4>Incomes</h4>
-                                    <List>
-                                        {this.renderCategoryTotals(this.state.data.incomes)}
-                                    </List>
-                                </Col>
-                                <Col xs={6} lg={4}>
-                                    <h4>Expenses</h4>
-                                    <List>
-                                        {this.renderCategoryTotals(this.state.data.expenses)}
-                                    </List>
-                                </Col>
-                            </Row>
-                        </Dialog>
-                    </Col>
-                </Row>
-            </Paper>
+                <Row xs="center">
+                    <Col xs={12}>
+                    <ExpansionPanel elevation={0}>
+                        <ExpansionPanelSummary style={{backgroundColor: "#b2ebf2"}} expandIcon={<ExpandMoreIcon color="textPrimary"/>}>
+                            <Typography style={{flexBasis: "33.3%"}} variant="display1" color="textPrimary">Category Totals</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <Col xs={12} sm={6}>
+                                <h4>Incomes</h4>
+                                <List>
+                                    {this.renderCategoryTotals(this.state.data.incomes)}
+                                </List>
+                            </Col>
+                            <Col xs={12} sm={6}>
+                                <h4>Expenses</h4>
+                                <List>
+                                    {this.renderCategoryTotals(this.state.data.expenses)}
+                                </List>
+                            </Col>
+                        </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                        </Col>
+                    </Row>
+            </Card>
         );
     }
 }
