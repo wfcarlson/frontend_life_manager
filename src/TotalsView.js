@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Col, Row } from 'react-flexbox-grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Card from '@material-ui/core/Card';
@@ -9,6 +8,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import { Typography, ListItemText } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Grid from '@material-ui/core/Grid';
 
 
 export default class TotalsView extends Component {
@@ -105,8 +105,6 @@ export default class TotalsView extends Component {
         const style = {
             paddingTop: '50px',
             textAlign: 'center',
-            display: 'inline-block',
-            width: '100%',
             fontSize: 16,
             fontWeight: 'bold'
         };
@@ -131,43 +129,45 @@ export default class TotalsView extends Component {
                 style={style}
                 elevation="12"
             >
-                <Row xs="center">
-                    <Col xs={12} sm={4}>
+                <Grid container item direction="col">
+                    <Grid item xs={12} lg={4}>
                         <p>Net</p>
                         <p style={net_style}>{this.formatMoney(this.state.data.net)}</p>
-                    </Col>
-                    <Col xs={12} sm={4}>
+                    </Grid>
+                    <Grid item xs={12} lg={4}>
                         <p>Total Income</p>
                         <p>{this.formatMoney(this.state.data.total_income)}</p>
-                    </Col>
-                    <Col xs={12} sm={4}>
+                    </Grid>
+                    <Grid item xs={12} lg={4}>
                         <p>Total Expenses</p>
                         <p>{this.formatMoney(this.state.data.total_expense)}</p>
-                    </Col>
-                </Row>
-                <Row xs="center">
-                    <Col xs={12}>
+                    </Grid>
+                </Grid>
+                <Grid container item direction="column">
+                    <Grid item xs={12} direction="row">
                     <ExpansionPanel elevation={0}>
                         <ExpansionPanelSummary style={{backgroundColor: "#b2ebf2"}} expandIcon={<ExpandMoreIcon color="textPrimary"/>}>
                             <Typography style={{flexBasis: "33.3%"}} variant="display1" color="textPrimary">Category Totals</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <Col xs={12} sm={6}>
-                                <h4>Incomes</h4>
-                                <List>
-                                    {this.renderCategoryTotals(this.state.data.incomes)}
-                                </List>
-                            </Col>
-                            <Col xs={12} sm={6}>
-                                <h4>Expenses</h4>
-                                <List>
-                                    {this.renderCategoryTotals(this.state.data.expenses)}
-                                </List>
-                            </Col>
+                            <Grid container direction="column" xs wrap="nowrap">
+                                <Grid item xs={12} lg={6} direction="row">
+                                    <h4>Incomes</h4>
+                                    <List>
+                                        {this.renderCategoryTotals(this.state.data.incomes)}
+                                    </List>
+                                </Grid>
+                                <Grid item xs={12} lg={6} direction="row">
+                                    <h4>Expenses</h4>
+                                    <List>
+                                        {this.renderCategoryTotals(this.state.data.expenses)}
+                                    </List>
+                                </Grid>
+                            </Grid>
                         </ExpansionPanelDetails>
                         </ExpansionPanel>
-                        </Col>
-                    </Row>
+                        </Grid>
+                    </Grid>
             </Card>
         );
     }

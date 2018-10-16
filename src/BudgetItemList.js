@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
 import Modal from 'react-responsive-modal';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
 
 export default class BudgetItemList extends Component {
 
@@ -80,13 +82,13 @@ export default class BudgetItemList extends Component {
 
 			return (
 				<TableRow key={ budget_item.id }>
-					<TableCell>
+					<TableCell md>
 						{ month }/{ date.getDate() }/{ date.getYear() }
 					</TableCell>
 					<TableCell>
 						{ budget_item.description }
 					</TableCell>
-					<TableCell>
+					<TableCell md>
 						{ budget_item.party }
 					</TableCell>
 					<TableCell>
@@ -107,31 +109,32 @@ export default class BudgetItemList extends Component {
 
 	render() {
 		return (
-			<div>
+			<Grid xs container wrap="wrap" justify="center">
 				<Modal open={this.state.open_modal} onClose={this.closeModal} little>
 					<p>Delete {this.state.budget_item.description} - ${this.state.budget_item.amount}</p>
 					<Button label="Confirm" primary={true} onClick={this.onClickConfirm} />
 					&nbsp;&nbsp;&nbsp; 
 					<Button label="Cancel" secondary={true} onClick={this.closeModal} />
 				</Modal>
-				<h3>{this.props.title}</h3>
-				<Table fixedHeader={true}>
-					
-					<TableHead displaySelectAll={false} adjustForCheckbox={false} >
-						<TableRow>
-							<TableCell>Date</TableCell>
-					        <TableCell>Description</TableCell>
-					        <TableCell>Vendor</TableCell>
-					        <TableCell>Amount</TableCell>
-					        <TableCell>Category</TableCell>
-					        <TableCell></TableCell>
-				        </TableRow>
-					</TableHead>
-					<TableBody displayRowCheckbox={false}>
-						{ this.renderRows() }
-					</TableBody>
-				</Table>
-			</div>
+				<Grid item wrap="wrap" zeroMinWidth style={{overflow: "auto"}} justify="center">
+					<h3>{this.props.title}</h3>
+					<Table fixedHeader={true}>						
+						<TableHead displaySelectAll={false} adjustForCheckbox={false} >
+							<TableRow>
+								<TableCell>Date</TableCell>
+								<TableCell>Description</TableCell>
+								<TableCell>Vendor</TableCell>
+								<TableCell>Amount</TableCell>
+								<TableCell>Category</TableCell>
+								<TableCell></TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody displayRowCheckbox={false}>
+							{ this.renderRows() }
+						</TableBody>
+					</Table>
+				</Grid>
+			</Grid>
 		);
 	}
 }

@@ -1,0 +1,7 @@
+version: '3.5'
+services:
+  frontend:
+    command: nginx -g daemon off 
+    build: .
+    ports:
+      - "3000:80"

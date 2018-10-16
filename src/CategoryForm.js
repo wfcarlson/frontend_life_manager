@@ -4,6 +4,9 @@ import { ValidatorForm } from 'react-form-validator-core';
 import { TextValidator } from 'react-material-ui-form-validator';
 import { API_ROOT } from './config.js';
 import { Row, Col } from 'react-flexbox-grid';
+import DialogTitle from '@material-ui/core/DialogContent';
+import DialogContent from '@material-ui/core/DialogContent';
+import Typography from '@material-ui/core/Typography';
 
 export default class CategoryForm extends Component {
     constructor(props) {
@@ -52,8 +55,8 @@ export default class CategoryForm extends Component {
 
     }
 
-    handleChange = (event, value) => {
-        this.setState({name:value});
+    handleChange = (event) => {
+        this.setState({name:event.target.value});
     }
 
     submit = () => {
@@ -62,26 +65,25 @@ export default class CategoryForm extends Component {
     
     render() {
         return (
-            <Col xs={4}>
-                <Row>
-                    <h4>New Category</h4>
-                </Row>
-                <Row>
-                    <ValidatorForm onSubmit={this.submit}>
-                        <TextValidator
-                            floatingLabelText="Name"
-                            onChange={this.handleChange}
-                            name="name"
-                            value={this.state.name}
-                            validators={['required']}
-                            errorMessages={'this field is required'}
-                        />
-                    </ValidatorForm>
-                </Row>
-                <Row end="xs">
-		            <Button onClick={this.handleClickSave} label="Submit" primary={true} />
-		        </Row>
-            </Col>
+            <div>
+                <DialogTitle>
+                    <Typography variant="display2" color="primary">New Category</Typography>
+                </DialogTitle>
+                <DialogContent>
+
+                            <ValidatorForm onSubmit={this.submit}>
+                                <TextValidator
+                                    label="Name"
+                                    onChange={this.handleChange}
+                                    name="name"
+                                    value={this.state.name}
+                                    validators={['required']}
+                                    errorMessages={'this field is required'}
+                                />
+                            </ValidatorForm>
+                            <Button onClick={this.handleClickSave} color="action">Submit</Button>
+                </DialogContent>
+            </div>
         );
     }
 

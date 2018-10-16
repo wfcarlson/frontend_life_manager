@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Row, Col } from 'react-flexbox-grid';
 
 export default class MonthNavigation extends Component {
 
@@ -123,8 +124,8 @@ export default class MonthNavigation extends Component {
             <li className={ hasPrev ? 'enabled' : 'disabled' }>
                 <a onClick={ () => { if (hasPrev) { this.setDate(this.state.start_date); }}}>First</a>
             </li>
-            <li className={ hasPrev ? 'enabled': 'disabled' }>
-                <a onClick={ () => { if (hasPrev) { this.setDate(prevDate) }}}>Previous Month</a>
+            <li className='enabled'>
+                <a onClick={ () => { this.setDate(prevDate) }}>Previous Month</a>
             </li>
             {months.map((date, index) =>
                 <li key={index} className={this.state.selected_date.getMonth() === date.getMonth() ? 'active enabled' : 'enabled'}>

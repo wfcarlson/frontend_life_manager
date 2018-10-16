@@ -20,4 +20,9 @@ export const theme = createMuiTheme({
         
     },
 
+    typography: {
+        fontSize: '14px',
+        useNextVariants: true,
+    }
+
 });
