@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Add from '@material-ui/icons/Add';
 import { Radio, RadioGroup, MenuItem, Button, Typography, FormControlLabel, Paper } from '@material-ui/core';
 import { ValidatorForm } from 'react-form-validator-core';
 import { TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import { Row, Col } from 'react-flexbox-grid';
-import { API_ROOT } from './config.js';
-import CategoryForm from './CategoryForm.js';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import ListItemText from '@material-ui/core/ListItemText';
-import Grid from '@material-ui/core/Grid';
+
 
 
 export default class BudgetItemForm extends Component {
@@ -88,25 +80,44 @@ export default class BudgetItemForm extends Component {
 		});
 	}
 
+	today = () => {
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1; //January is 0!
+		var yyyy = today.getFullYear();
+
+		if (dd < 10) {
+		dd = '0' + dd;
+		}
+
+		if (mm < 10) {
+		mm = '0' + mm;
+		}
+
+		today = mm + '/' + dd + '/' + yyyy;
+		document.write(today);
+	}
+
 	handleSubmit = () => {
 		var budgetItem = {
 			amount: this.state.amount,
 			category: this.state.category,
 			description: this.state.description,
-			party: this.state.party,
-			time: (this.state.time ? this.state.time : new Date(Date.now()).toJSON()),
+			vendor: this.state.party,
+			date: this.today(),
 		}
 
 		var data = {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-api-key': ''
 			},
 			mode: 'cors',
 			body: JSON.stringify(budgetItem),
 		};
 
-		fetch(API_ROOT + '/api/' + this.state.type + 's/', data)
+		fetch("", data)
 			.then(() => { this.clearItem(); this.props.update(); this.closeBudgetItemModal(); })
 			.catch(err => { console.log(err); this.closeBudgetItemModal(); });
 	
@@ -157,26 +168,27 @@ export default class BudgetItemForm extends Component {
 		
 		return (
 			<div style={{verticalAlign:"middle"}}>
-				<Dialog open={this.state.open_category_modal} onClose={this.closeCategoryModal}>
-					<CategoryForm type={this.state.type} close={this.closeCategoryModal} update={this.props.updateCategories} setCategory={this.setCategory} />
-				</Dialog>
-				<Button style={{position: "fixed", marginTop:30, bottom: 50, right: 50}} onClick={this.openBudgetItemModal} variant="fab" color="secondary">
-					<Add />
-				</Button>
-				<Dialog open={this.state.open_budget_item_modal} onClose={this.closeBudgetItemModal}>
 					<ValidatorForm
 							ref="form"
 							onSubmit={this.handleSubmit}
 							onError={errors => console.log(errors)}
 						>
-						<DialogTitle><Typography variant="display2" color="primary">New Budget Item</Typography></DialogTitle>
-						<DialogContent>
 							<Row>
 								<Col xs={12}>
-									<RadioGroup name="budget_item_type" value={this.state.type} onChange={this.handleChange('type')}>
-										<FormControlLabel label="Expense" name="expense" value="expense" control={<Radio/>} />
-										<FormControlLabel label="Income" name="income" value="income" control={<Radio/>} />
-									</RadioGroup>
+									<Typography variant="display2" color="primary">New Budget Item</Typography>
+								</Col>
+							</Row>
+							<Row>
+								<Col xs={12}>
+									<SelectValidator
+										onChange={this.handleChange('type')}
+										value={this.state.type}
+										name="type"
+										style={{width: '178px'}}
+									>
+										<MenuItem value={'income'}>Income</MenuItem>
+            							<MenuItem value={'expense'}>Expense</MenuItem>
+									</SelectValidator>
 								</Col>
 							</Row>
 								{/* <DatePicker
@@ -213,9 +225,9 @@ export default class BudgetItemForm extends Component {
 							<Row>
 								<Col xs={12}>
 									<TextValidator
-										label="Party"
+										label="Vendor"
 										onChange={this.handleChange('party')}
-										name="party"
+										name="vendor"
 										value={this.state.party}
 										validators={['required']}
 										errorMessages={'this field is required'}
@@ -223,7 +235,7 @@ export default class BudgetItemForm extends Component {
 								</Col>
 							</Row>
 							<Row>
-								<Col xs={9}>
+								{/*<Col xs={9}>
 									<SelectValidator 
 										label="Category"
 										onChange={this.handleSelectChange('category')}
@@ -234,22 +246,27 @@ export default class BudgetItemForm extends Component {
 										style={{width: "80%"}}
 									>
 										{ this.renderCategoryOptions() }
-									</SelectValidator>
-								</Col>
-								<Col xs={3}>
+									</SelectValidator>*/}
+									<Col xs={12}>
+										<TextValidator
+											label="Category"
+											onChange={this.handleChange('category')}
+											name="vendor"
+											value={this.state.category}
+											validators={['required']}
+											errorMessages={'this field is required'}
+										/>
+									</Col>
+								{/*<Col xs={3}>
 									<IconButton onClick={this.addNewCategory}><Add /></IconButton>
-								</Col>
+								</Col>*/}
 							</Row>
-						</DialogContent>
-						<DialogActions>
 							<Row>
-								<Col>
-									<Button type="Save" color="secondary">Submit</Button>	
+								<Col xs={12}>
+									<Button type="Save" color="secondary">Submit</Button>
 								</Col>
 							</Row>
-						</DialogActions>
 					</ValidatorForm>
-				</Dialog>
 			</div>
 		);
 	}

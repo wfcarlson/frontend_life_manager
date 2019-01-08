@@ -48,7 +48,7 @@ class App extends Component {
 			return response.json();
 		}).then((result) => {
 			this.setState({ start_date: new Date(result.date) });
-		}).catch(err => { alert("Start date") })
+		}).catch(err => {  })
 	}
 
 	getCategoryOptions = () => {
@@ -64,12 +64,12 @@ class App extends Component {
 			return response.json();
 		}).then((result) => {
 			this.setState({ expense_category_options: result });
-		}).catch(err => { alert(err) })
+		}).catch(err => {  })
 		fetch(API_ROOT + '/api/incomes/categories/', data).then((response) => {
 			return response.json();
 		}).then((result) => {
 			this.setState({ income_category_options: result });
-		}).catch(err => { alert(err) })
+		}).catch(err => {  })
 	}
 
 	getExpenses = () => {
@@ -85,7 +85,7 @@ class App extends Component {
 			return response.json();
 		}).then((result) => {
 			this.setState({ expenses: result });
-		}).catch(err => { alert(err) });
+		}).catch(err => {  });
 	}
 
 	getIncomes = () => {
@@ -101,7 +101,7 @@ class App extends Component {
 			return response.json();
 		}).then((result) => {
 			this.setState({ incomes: result });
-		}).catch(err => { alert(err) });
+		}).catch(err => {  });
 	}
 
 	update = () => {
@@ -157,6 +157,10 @@ class App extends Component {
 					</Grid>
 					<Grid style={{ paddingTop: 75, paddingLeft: 30, paddingRight: 30}} container justify="center">
 						<Grid item xs={12} style={{ paddingRight: 45, padding: 45}}>
+							<BudgetItemForm 
+								update={ this.update }
+								updateCategories={ this.updateCategories }
+							/>
 							<TotalsView 
 								income_category_options={ this.state.income_category_options }
 								expense_category_options={ this.state.expense_category_options }
@@ -180,14 +184,6 @@ class App extends Component {
 								category_options={ this.state.expense_category_options }
 								budget_items={ this.state.expenses }
 								update={ this.update }	
-							/>
-						</Grid>
-						<Grid item center="xs" xs>
-							<BudgetItemForm 
-								income_category_options={ this.state.income_category_options }
-								expense_category_options={ this.state.expense_category_options }
-								update={ this.update }
-								updateCategories={ this.updateCategories }
 							/>
 						</Grid>
 						<Grid item style={{paddingTop:50}} xs>
