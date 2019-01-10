@@ -67,7 +67,7 @@ export default class CategoryForm extends Component {
         return (
             <div>
                 <DialogTitle>
-                    <Typography variant="display2" color="primary">New Category</Typography>
+                    <Typography variant="h3" color="primary">New Category</Typography>
                 </DialogTitle>
                 <DialogContent>
 

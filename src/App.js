@@ -4,7 +4,7 @@ import BudgetItemList from './BudgetItemList.js';
 import TotalsView from './TotalsView.js';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
-import { API_ROOT } from './config.js';
+import { API_ROOT, API_KEY } from './config.js';
 import MonthNavigation from './MonthNavigation.js';
 import './App.css';
 import { getMonthString } from './utils.js';
@@ -37,7 +37,7 @@ class App extends Component {
 	}
 
 	getStartDate = () => {
-		var data = {
+		/*var data = {
 			method: "GET",
 			headers: {
 
@@ -48,11 +48,11 @@ class App extends Component {
 			return response.json();
 		}).then((result) => {
 			this.setState({ start_date: new Date(result.date) });
-		}).catch(err => {  })
+		}).catch(err => {  })*/
 	}
 
 	getCategoryOptions = () => {
-		var data = {
+		/*var data = {
 			method: "GET",
 			headers: {
 
@@ -69,19 +69,19 @@ class App extends Component {
 			return response.json();
 		}).then((result) => {
 			this.setState({ income_category_options: result });
-		}).catch(err => {  })
+		}).catch(err => {  })*/
 	}
 
 	getExpenses = () => {
 		var data = {
 			method: "GET",
 			headers: {
-
+				'x-api-key': API_KEY
 			},
 			mode: 'cors'
 		};
 
-		fetch(API_ROOT + '/api/expenses/' + this.state.date.getFullYear() + '/' + (this.state.date.getMonth() + 1) + '/', data).then((response) => {
+		fetch(API_ROOT + '/expenses?year=' + this.state.date.getFullYear() + '&month=' + (this.state.date.getMonth() + 1), data).then((response) => {
 			return response.json();
 		}).then((result) => {
 			this.setState({ expenses: result });
@@ -92,12 +92,12 @@ class App extends Component {
 		var data = {
 			method: "GET",
 			headers: {
-
+				'x-api-key': API_KEY
 			},
 			mode: 'cors'
 		};
 
-		fetch(API_ROOT + '/api/incomes/' + this.state.date.getFullYear() + '/' + (this.state.date.getMonth() + 1) + '/', data).then((response) => {
+		fetch(API_ROOT + '/incomes?year=' + this.state.date.getFullYear() + '&month=' + (this.state.date.getMonth() + 1), data).then((response) => {
 			return response.json();
 		}).then((result) => {
 			this.setState({ incomes: result });
@@ -125,19 +125,21 @@ class App extends Component {
 
 	render() {
 		var title = "Monthly Budget";
-		if (false && new Date().getFullYear() > this.state.date.getFullYear()) {
-			title = title + " - " + getMonthString(this.state.date.getMonth()) + " " + this.state.date.getFullYear();
+		title = title + ": " + getMonthString(this.state.date.getMonth())
+
+		if (this.state.date.getFullYear() !== new Date().getFullYear()) {
+			title = title + " " + this.state.date.getFullYear();
 		}
 
 		return (
 			<div className="App">
-					<Grid container xs justify="center">
+					<Grid container justify="center">
 						<AppBar
 							position='fixed'
 							color='primary'
 						>
 							<Toolbar>
-								<Typography variant="display2" color="inherit" style={{fontWeight: 'bold', flexGrow: 1, justifyContent: "flex-start"}}>
+								<Typography variant="h3" color="inherit" style={{fontWeight: 'bold', flexGrow: 1, justifyContent: "flex-start"}}>
 									{ title }
 								</Typography>
 								<IconButton
@@ -155,16 +157,16 @@ class App extends Component {
 							</Toolbar>
 						</AppBar>
 					</Grid>
-					<Grid style={{ paddingTop: 75, paddingLeft: 30, paddingRight: 30}} container justify="center">
-						<Grid item xs={12} style={{ paddingRight: 45, padding: 45}}>
-							<BudgetItemForm 
-								update={ this.update }
-								updateCategories={ this.updateCategories }
-							/>
+					<Grid style={{ paddingTop: 75, overflow: 'hidden' }} container>
+						<Grid item xs={12}>
 							<TotalsView 
 								income_category_options={ this.state.income_category_options }
 								expense_category_options={ this.state.expense_category_options }
 								date={ this.state.date }
+							/>
+							<BudgetItemForm 
+								update={ this.update }
+								updateCategories={ this.updateCategories }
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -177,7 +179,7 @@ class App extends Component {
 								style={{paddingTop: '50px'}}
 							/>
 						</Grid>
-						<Grid container style={{paddingTop:50}} xs={12} justify="center">
+						<Grid container style={{paddingTop:50}}>
 							<BudgetItemList
 								title="Expenses"
 								type="expense"

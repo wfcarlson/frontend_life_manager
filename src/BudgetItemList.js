@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import { API_ROOT } from './config.js';
-import IconButton from '@material-ui/core/IconButton';
-import Delete from '@material-ui/icons/Delete';
 import Modal from 'react-responsive-modal';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import { ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 
 export default class BudgetItemList extends Component {
@@ -18,7 +17,6 @@ export default class BudgetItemList extends Component {
 		super(props);
 		this.state = {
 			budget_items: [],
-			category_options: [],
 			open_modal: false,
 			budget_item: { id:-1, description:"hello" }
 		};
@@ -26,20 +24,8 @@ export default class BudgetItemList extends Component {
 
 	componentWillReceiveProps(props) {
 		this.setState({
-			category_options: props.category_options,
 			budget_items: props.budget_items,
 		});
-	}
-
-	getCategoryOption = (pk) => {
-		var name = "Unknown Category";
-		this.state.category_options.forEach((option) => {
-			if (option.id === pk){
-				name = option.name;
-			}
-		});
-
-		return name;
 	}
 
 	handleClickDelete = (budget_item) => {
@@ -49,7 +35,7 @@ export default class BudgetItemList extends Component {
 	}
 
 	onClickConfirm = () => {
-		var data = {
+		/*var data = {
 			method: "DELETE",
 			headers: {
 				'Content-Type': 'application/json'
@@ -60,7 +46,7 @@ export default class BudgetItemList extends Component {
 		fetch(API_ROOT + '/api/' + this.props.type + 's/' + this.state.budget_item.id + "/", data)
 			.then(() => { this.props.update(); })
 			.catch(err => { console.log(err) });
-		this.closeModal();
+		this.closeModal(); */
 	}
 
 	openModal = (budget_item) => {
@@ -74,65 +60,59 @@ export default class BudgetItemList extends Component {
 	renderRows = () => {
 		return this.state.budget_items.map((budget_item) => {
 			
-			var date = new Date(budget_item.time);
+			var date = new Date(budget_item.date);
 			var month = "" + (date.getMonth() + 1);
 			if (month.length === 1){
 				month = "0" + month;
 			}
+			var day = "" + (date.getDate());
+			if (day.length === 1) {
+				day = "0" + day;
+			}
 
 			return (
-				<TableRow key={ budget_item.id }>
-					<TableCell md>
-						{ month }/{ date.getDate() }/{ date.getYear() }
-					</TableCell>
-					<TableCell>
-						{ budget_item.description }
-					</TableCell>
-					<TableCell md>
-						{ budget_item.party }
-					</TableCell>
-					<TableCell>
-						${ budget_item.amount }
-					</TableCell>
-					<TableCell>
-						{ this.getCategoryOption(budget_item.category) }
-					</TableCell>
-					<TableCell>
-						<IconButton onClick={this.handleClickDelete(budget_item)}>
-							<Delete hoverColor="red"/>
-						</IconButton>
-					</TableCell>
-				</TableRow>
+				<ExpansionPanel key={ budget_item.id }>
+					<ExpansionPanelSummary style={{padding: '0'}}>
+						<Typography style={{paddingLeft: '10px', paddingRight: '40px'}} variant="body1">{ month }/{ day }</Typography>
+						<Typography variant="body1" noWrap={true}>{ budget_item.description }</Typography>
+						<Typography style={{position: 'absolute', paddingRight: '0px', right: '10px'}} variant="body1">${ budget_item.amount }</Typography>
+					</ExpansionPanelSummary>
+					<ExpansionPanelDetails>
+						<Grid container>
+							<Grid container direction='row'>
+								<Typography style={{ paddingLeft: '63px', paddingBottom: '15px' }} variant="body1">{ budget_item.vendor ? budget_item.vendor : budget_item.party }</Typography>
+							</Grid>
+							<Grid container direction='row'>
+								<Typography style={{ paddingLeft: '63px' }} variant="body1">{ budget_item.category }</Typography>
+							</Grid>
+						</Grid>
+					</ExpansionPanelDetails>
+				</ExpansionPanel>
 			);
 		});
 	}
 
 	render() {
 		return (
-			<Grid xs container wrap="wrap" justify="center">
+			<Grid container justify="center">
 				<Modal open={this.state.open_modal} onClose={this.closeModal} little>
 					<p>Delete {this.state.budget_item.description} - ${this.state.budget_item.amount}</p>
 					<Button label="Confirm" primary={true} onClick={this.onClickConfirm} />
-					&nbsp;&nbsp;&nbsp; 
 					<Button label="Cancel" secondary={true} onClick={this.closeModal} />
 				</Modal>
-				<Grid item wrap="wrap" zeroMinWidth style={{overflow: "auto"}} justify="center">
+				<Grid item zeroMinWidth style={{overflow: "auto"}} >
 					<h3>{this.props.title}</h3>
-					<Table fixedHeader={true}>						
-						<TableHead displaySelectAll={false} adjustForCheckbox={false} >
+					<Table>						
+						<TableHead>
 							<TableRow>
 								<TableCell>Date</TableCell>
 								<TableCell>Description</TableCell>
-								<TableCell>Vendor</TableCell>
 								<TableCell>Amount</TableCell>
-								<TableCell>Category</TableCell>
-								<TableCell></TableCell>
 							</TableRow>
 						</TableHead>
-						<TableBody displayRowCheckbox={false}>
-							{ this.renderRows() }
-						</TableBody>
 					</Table>
+					{ this.renderRows() }
+
 				</Grid>
 			</Grid>
 		);

@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Card from '@material-ui/core/Card';
-import { API_ROOT } from './config.js';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import { Typography, ListItemText } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 
@@ -47,7 +41,7 @@ export default class TotalsView extends Component {
     }
 
     getData = () => {
-        var data = {
+        /*var data = {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
@@ -62,7 +56,7 @@ export default class TotalsView extends Component {
                     this.setState({data:data});
                 });
         })
-        .catch(err => { console.log(err); this.close(); });
+        .catch(err => { console.log(err); this.close(); }); */
     }
 
     sortCategoryKeys = (categories) => {
@@ -80,7 +74,7 @@ export default class TotalsView extends Component {
                             inset primary={key} 
                             primaryTypographyProps={{variant: "headline"}} 
                             secondary={this.formatMoney(categories[key])}
-                            secondaryTypographyProps={{variant: "display1"}}
+                            secondaryTypographyProps={{variant: "h4"}}
                         >
                         </ListItemText>
                     </ListItem>;
@@ -100,12 +94,12 @@ export default class TotalsView extends Component {
     }
     
     render() {
-        const { classes } = this.props;
 
         const style = {
-            paddingTop: '50px',
+            paddingTop: '30px',
+            paddingBottom: '30px',
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: 28,
             fontWeight: 'bold'
         };
 
@@ -125,39 +119,30 @@ export default class TotalsView extends Component {
         }
 
         return (
-            <Card
+            <Paper
                 style={style}
-                elevation="12"
             >
-                <Grid container item direction="col">
-                    <Grid item xs={12} lg={4}>
-                        <p>Net</p>
+                <Grid container direction="column">
+                    <Grid item xs={12}>
                         <p style={net_style}>{this.formatMoney(this.state.data.net)}</p>
                     </Grid>
-                    <Grid item xs={12} lg={4}>
-                        <p>Total Income</p>
-                        <p>{this.formatMoney(this.state.data.total_income)}</p>
-                    </Grid>
-                    <Grid item xs={12} lg={4}>
-                        <p>Total Expenses</p>
-                        <p>{this.formatMoney(this.state.data.total_expense)}</p>
-                    </Grid>
+
                 </Grid>
-                <Grid container item direction="column">
-                    <Grid item xs={12} direction="row">
+                {/*<Grid container direction="column">
+                    <Grid item xs={12}>
                     <ExpansionPanel elevation={0}>
-                        <ExpansionPanelSummary style={{backgroundColor: "#b2ebf2"}} expandIcon={<ExpandMoreIcon color="textPrimary"/>}>
-                            <Typography style={{flexBasis: "33.3%"}} variant="display1" color="textPrimary">Category Totals</Typography>
+                        <ExpansionPanelSummary style={{backgroundColor: "#b2ebf2"}} expandIcon={<ExpandMoreIcon color="primary"/>}>
+                            <Typography style={{flexBasis: "33.3%"}} variant="h4" color="primary">Category Totals</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <Grid container direction="column" xs wrap="nowrap">
-                                <Grid item xs={12} lg={6} direction="row">
+                            <Grid container direction="column" wrap="nowrap">
+                                <Grid item xs={12} lg={6}>
                                     <h4>Incomes</h4>
                                     <List>
                                         {this.renderCategoryTotals(this.state.data.incomes)}
                                     </List>
                                 </Grid>
-                                <Grid item xs={12} lg={6} direction="row">
+                                <Grid item xs={12} lg={6}>
                                     <h4>Expenses</h4>
                                     <List>
                                         {this.renderCategoryTotals(this.state.data.expenses)}
@@ -167,8 +152,8 @@ export default class TotalsView extends Component {
                         </ExpansionPanelDetails>
                         </ExpansionPanel>
                         </Grid>
-                    </Grid>
-            </Card>
+        </Grid>*/}
+            </Paper>
         );
     }
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-flexbox-grid';
 
 export default class MonthNavigation extends Component {
 
@@ -78,7 +77,7 @@ export default class MonthNavigation extends Component {
         }
         else if ((dates[dates.length - 1].getFullYear() < today.getFullYear()) || dates[dates.length - 1].getMonth() < today.getMonth()){
           //add another month onto the end
-          var new_date = new Date(dates[dates.length - 1].getTime());
+          new_date = new Date(dates[dates.length - 1].getTime());
           new_date.setMonth(dates[dates.length - 1].getMonth() + 1);
           dates.push(new_date);
         }

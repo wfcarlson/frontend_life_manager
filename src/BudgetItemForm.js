@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Radio, RadioGroup, MenuItem, Button, Typography, FormControlLabel, Paper } from '@material-ui/core';
+import { MenuItem, Button, Typography } from '@material-ui/core';
 import { ValidatorForm } from 'react-form-validator-core';
 import { TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import { Row, Col } from 'react-flexbox-grid';
 import ListItemText from '@material-ui/core/ListItemText';
+import { API_KEY, API_ROOT } from './config';
 
 
 
@@ -95,7 +96,6 @@ export default class BudgetItemForm extends Component {
 		}
 
 		today = mm + '/' + dd + '/' + yyyy;
-		document.write(today);
 	}
 
 	handleSubmit = () => {
@@ -103,7 +103,7 @@ export default class BudgetItemForm extends Component {
 			amount: this.state.amount,
 			category: this.state.category,
 			description: this.state.description,
-			vendor: this.state.party,
+			party: this.state.party,
 			date: this.today(),
 		}
 
@@ -111,15 +111,20 @@ export default class BudgetItemForm extends Component {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',
-				'x-api-key': ''
+				'x-api-key': API_KEY
 			},
 			mode: 'cors',
 			body: JSON.stringify(budgetItem),
 		};
+		
+		var endpoint = "/expenses";
+		if (this.state.type === 'income') {
+			endpoint = '/incomes'
+		}
 
-		fetch("", data)
-			.then(() => { this.clearItem(); this.props.update(); this.closeBudgetItemModal(); })
-			.catch(err => { console.log(err); this.closeBudgetItemModal(); });
+		fetch(API_ROOT + endpoint, data)
+			.then(() => { this.clearItem() })
+			.catch(err => { console.log(err) });
 	
 	}
 
@@ -172,10 +177,11 @@ export default class BudgetItemForm extends Component {
 							ref="form"
 							onSubmit={this.handleSubmit}
 							onError={errors => console.log(errors)}
+							style={{ padding: '45px' }}
 						>
 							<Row>
 								<Col xs={12}>
-									<Typography variant="display2" color="primary">New Budget Item</Typography>
+									<Typography variant="h3" color="primary" style={{ paddingBottom: '30px' }}>New Budget Item</Typography>
 								</Col>
 							</Row>
 							<Row>
@@ -251,7 +257,7 @@ export default class BudgetItemForm extends Component {
 										<TextValidator
 											label="Category"
 											onChange={this.handleChange('category')}
-											name="vendor"
+											name="category"
 											value={this.state.category}
 											validators={['required']}
 											errorMessages={'this field is required'}
@@ -263,7 +269,7 @@ export default class BudgetItemForm extends Component {
 							</Row>
 							<Row>
 								<Col xs={12}>
-									<Button type="Save" color="secondary">Submit</Button>
+									<Button type="Save" color="secondary" style={{ marginTop: '30px' }}>Submit</Button>
 								</Col>
 							</Row>
 					</ValidatorForm>
