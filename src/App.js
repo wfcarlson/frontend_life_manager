@@ -160,9 +160,9 @@ class App extends Component {
 					<Grid style={{ paddingTop: 75, overflow: 'hidden' }} container>
 						<Grid item xs={12}>
 							<TotalsView 
-								income_category_options={ this.state.income_category_options }
-								expense_category_options={ this.state.expense_category_options }
 								date={ this.state.date }
+								incomes={ this.state.incomes }
+								expenses={ this.state.expenses }
 							/>
 							<BudgetItemForm 
 								update={ this.update }

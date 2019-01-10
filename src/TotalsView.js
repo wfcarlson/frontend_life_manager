@@ -13,31 +13,40 @@ export default class TotalsView extends Component {
             income_category_options: [],
             expense_category_options: [],
             collapse: false,
-            data: {
-                net: 0,
-                total_income: 0,
-                total_expense: 0,
-                incomes: {
-
-                },
-                expenses: {
-
-                }
-            },
+            total_income: 0,
+            total_expense: 0,
             date: new Date(),
 		};
     }
 
     componentWillReceiveProps(props) {
 		this.setState({
-			income_category_options: props.income_category_options,
-            expense_category_options: props.expense_category_options,
+            incomes: props.incomes,
+            expenses: props.expenses,
             date: props.date 
-		}, () => this.getData());
+		}, () => {
+                this.getData();
+                this.calculateTotals();
+            }
+        );
     }
 
     componentDidMount() {
         this.getData();
+    }
+
+    calculateTotals = () => {
+        var income_total = 0;
+        this.state.incomes.map((income) => {
+            income_total += income.amount;
+        })
+
+        var expense_total = 0;
+        this.state.expenses.map((expense) => {
+            expense_total += expense.amount;
+        })
+
+        this.setState({total_income: income_total, total_expense: expense_total});
     }
 
     getData = () => {
@@ -106,13 +115,15 @@ export default class TotalsView extends Component {
         var net_style = {
                 
         };
+
+        var net = this.state.total_income - this.state.total_expense;
     
-        if (this.state.data.net > 0) {
+        if (net > 0) {
             net_style = {
                 color:"green"
             }
         }
-        else if (this.state.data.net < 0) {
+        else if (net < 0) {
             net_style = {
                 color:"red"
             }
@@ -124,7 +135,7 @@ export default class TotalsView extends Component {
             >
                 <Grid container direction="column">
                     <Grid item xs={12}>
-                        <p style={net_style}>{this.formatMoney(this.state.data.net)}</p>
+                        <p style={net_style}>{this.formatMoney(net)}</p>
                     </Grid>
 
                 </Grid>
