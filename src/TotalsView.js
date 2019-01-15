@@ -39,6 +39,7 @@ export default class TotalsView extends Component {
             else {
                 income_categories[income.category] = income.amount
             }
+            return 0;
         })
 
         this.setState({ income_categories: income_categories })
@@ -51,6 +52,7 @@ export default class TotalsView extends Component {
             else {
                 expense_categories[expense.category] = expense.amount
             }
+            return 0;
         })
 
         this.setState({ expense_categories: expense_categories })

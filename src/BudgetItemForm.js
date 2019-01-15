@@ -132,7 +132,7 @@ export default class BudgetItemForm extends Component {
 		}
 
 		fetch(API_ROOT + endpoint, data)
-			.then(() => { this.props.update(), this.clearItem(); })
+			.then(() => { this.props.update(); this.clearItem(); })
 			.catch(err => { console.log(err) });
 	
 	}

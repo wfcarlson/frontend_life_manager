@@ -13,7 +13,6 @@ import AccountBalance from '@material-ui/icons/AccountBalance';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import Typography from '@material-ui/core/Typography';
 import { Toolbar } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
 import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 
 class App extends Component {
