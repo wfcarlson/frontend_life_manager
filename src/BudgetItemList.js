@@ -7,8 +7,10 @@ import Modal from 'react-responsive-modal';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import { ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import { ExpansionPanelSummary, ExpansionPanelDetails, IconButton } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { API_ROOT, API_KEY } from './config';
 
 
 export default class BudgetItemList extends Component {
@@ -35,18 +37,19 @@ export default class BudgetItemList extends Component {
 	}
 
 	onClickConfirm = () => {
-		/*var data = {
+		var data = {
 			method: "DELETE",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-api-key': API_KEY
 			},
 			mode: 'cors',
 		};
 
-		fetch(API_ROOT + '/api/' + this.props.type + 's/' + this.state.budget_item.id + "/", data)
+		fetch(API_ROOT + '/' + this.props.type + 's?id=' + this.state.budget_item.id, data)
 			.then(() => { this.props.update(); })
 			.catch(err => { console.log(err) });
-		this.closeModal(); */
+		this.closeModal(); 
 	}
 
 	openModal = (budget_item) => {
@@ -78,11 +81,16 @@ export default class BudgetItemList extends Component {
 						<Typography style={{position: 'absolute', paddingRight: '0px', right: '10px'}} variant="body1">${ budget_item.amount }</Typography>
 					</ExpansionPanelSummary>
 					<ExpansionPanelDetails>
-						<Grid container>
-							<Grid container direction='row'>
+						<Grid container direction='row'>
+							<Grid item>
+								<IconButton onClick={() => this.openModal(budget_item)}>
+									<DeleteIcon fontSize='small' />
+								</IconButton>
+							</Grid> 
+							<Grid item>
 								<Typography style={{ paddingLeft: '63px', paddingBottom: '15px' }} variant="body1">{ budget_item.vendor ? budget_item.vendor : budget_item.party }</Typography>
 							</Grid>
-							<Grid container direction='row'>
+							<Grid item>
 								<Typography style={{ paddingLeft: '63px' }} variant="body1">{ budget_item.category }</Typography>
 							</Grid>
 						</Grid>
@@ -96,9 +104,9 @@ export default class BudgetItemList extends Component {
 		return (
 			<Grid container justify="center">
 				<Modal open={this.state.open_modal} onClose={this.closeModal} little>
-					<p>Delete {this.state.budget_item.description} - ${this.state.budget_item.amount}</p>
-					<Button label="Confirm" primary={true} onClick={this.onClickConfirm} />
-					<Button label="Cancel" secondary={true} onClick={this.closeModal} />
+					<p>Delete?</p><p>{this.state.budget_item.description} - ${this.state.budget_item.amount}</p>
+					<Button color='primary' onClick={this.onClickConfirm}>Confirm</Button>
+					<Button color='secondary' onClick={this.closeModal}>Cancel</Button>
 				</Modal>
 				<Grid item zeroMinWidth style={{overflow: "auto"}} >
 					<h3>{this.props.title}</h3>

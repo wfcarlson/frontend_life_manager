@@ -13,7 +13,8 @@ import AccountBalance from '@material-ui/icons/AccountBalance';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import Typography from '@material-ui/core/Typography';
 import { Toolbar } from '@material-ui/core';
-
+import Paper from '@material-ui/core/Paper';
+import { ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 
 class App extends Component {
 
@@ -24,6 +25,8 @@ class App extends Component {
 			income_category_options: [],
 			expenses: [],
 			incomes: [],
+			total_expense: 0,
+			total_income: 0,
 			date: new Date(),
 			start_date: new Date(),
 		}
@@ -110,7 +113,6 @@ class App extends Component {
 	}
 
 	updateCategories = () => {
-		this.getCategoryOptions();
 	}
 
 	setDate = (date) => {
@@ -119,17 +121,53 @@ class App extends Component {
 		}, () => { this.update() })
 	}
 
-	handleMenu = () => {
+    calculateNet = () => {
+
+        function add(a, b) {
+            return a + b.amount;
+        }
+
+        return this.state.incomes.reduce(add, 0) - this.state.expenses.reduce(add, 0)
 
 	}
+	
+    formatMoney = (amount) => {
+        return "$ " + parseFloat(amount).toFixed(2);
+    }
 
 	render() {
+
 		var title = "Monthly Budget";
 		title = title + ": " + getMonthString(this.state.date.getMonth())
 
 		if (this.state.date.getFullYear() !== new Date().getFullYear()) {
 			title = title + " " + this.state.date.getFullYear();
 		}
+
+        const style = {
+            paddingTop: '30px',
+            paddingBottom: '30px',
+            textAlign: 'center',
+            fontSize: 28,
+			fontWeight: 'bold',
+        };
+
+        var net_style = {
+                
+		};
+		
+		var net = this.calculateNet();
+    
+        if (net > 0) {
+            net_style = {
+                color:"green"
+            }
+        }
+        else if (net < 0) {
+            net_style = {
+                color:"red"
+            }
+        }
 
 		return (
 			<div className="App">
@@ -159,11 +197,22 @@ class App extends Component {
 					</Grid>
 					<Grid style={{ paddingTop: 75, overflow: 'hidden' }} container>
 						<Grid item xs={12}>
-							<TotalsView 
-								date={ this.state.date }
-								incomes={ this.state.incomes }
-								expenses={ this.state.expenses }
-							/>
+							<ExpansionPanel>
+								<ExpansionPanelSummary style={style}>
+									<Grid container direction="column">
+										<Grid item xs={12}>
+											<p style={net_style}>{this.formatMoney(net)}</p>
+										</Grid>
+									</Grid>
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<TotalsView 
+										date={ this.state.date }
+										incomes={ this.state.incomes }
+										expenses={ this.state.expenses }
+									/>
+								</ExpansionPanelDetails>
+							</ExpansionPanel>
 							<BudgetItemForm 
 								update={ this.update }
 								updateCategories={ this.updateCategories }

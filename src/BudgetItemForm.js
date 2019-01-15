@@ -5,6 +5,9 @@ import { TextValidator, SelectValidator } from 'react-material-ui-form-validator
 import { Row, Col } from 'react-flexbox-grid';
 import ListItemText from '@material-ui/core/ListItemText';
 import { API_KEY, API_ROOT } from './config';
+import { MuiPickersUtilsProvider, DatePicker } from 'material-ui-pickers';
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
 
 
 
@@ -47,6 +50,12 @@ export default class BudgetItemForm extends Component {
 			obj[attribute] = event.target.value;
 			this.setState(obj);
 		}
+	}
+
+	handleDateChange = (date) => {
+		this.setState({date: new Date(date)});
+		console.log(new Date(date).getFullYear())
+		console.log(this.formatDate(new Date(date)));
 	}
 
 	handleNumberChange = (attribute) => {
@@ -104,7 +113,7 @@ export default class BudgetItemForm extends Component {
 			category: this.state.category,
 			description: this.state.description,
 			party: this.state.party,
-			date: this.today(),
+			date: this.formatDate(this.state.date),
 		}
 
 		var data = {
@@ -123,7 +132,7 @@ export default class BudgetItemForm extends Component {
 		}
 
 		fetch(API_ROOT + endpoint, data)
-			.then(() => { this.clearItem() })
+			.then(() => { this.props.update(), this.clearItem(); })
 			.catch(err => { console.log(err) });
 	
 	}
@@ -134,7 +143,7 @@ export default class BudgetItemForm extends Component {
 			month = "0" + month;
 		}	
 
-		return "" + month + "/" + date.getDate() + "/" + date.getYear();
+		return "" + date.getFullYear() + '-' + month + "-" + date.getDate();
 	}
 
 	renderCategoryOptions = () => {
@@ -197,25 +206,6 @@ export default class BudgetItemForm extends Component {
 									</SelectValidator>
 								</Col>
 							</Row>
-								{/* <DatePicker
-									hintText="Date"
-									name="time"
-									value={this.state.time}
-									onChange={this.handleChange('time')}
-									formatDate={this.formatDate}
-								/> */}
-							<Row>
-								<Col xs={12}>
-									<TextValidator
-										label="Amount"
-										onChange={this.handleNumberChange('amount')}
-										name="amount"
-										value={this.state.amount}
-										validators={['required']}
-										errorMessages={'this field is required'}
-									/>
-								</Col>
-							</Row>
 							<Row>
 								<Col xs={12}>
 									<TextValidator
@@ -223,6 +213,26 @@ export default class BudgetItemForm extends Component {
 										onChange={this.handleChange('description')}
 										name="description"
 										value={this.state.description}
+										validators={['required']}
+										errorMessages={'this field is required'}
+									/>
+								</Col>
+							</Row>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<DatePicker
+									margin="normal"
+									label="Date"
+									value={this.state.date}
+									onChange={this.handleDateChange}
+								/>
+							</MuiPickersUtilsProvider>
+							<Row>
+								<Col xs={12}>
+									<TextValidator
+										label="Amount"
+										onChange={this.handleNumberChange('amount')}
+										name="amount"
+										value={this.state.amount}
 										validators={['required']}
 										errorMessages={'this field is required'}
 									/>
@@ -241,31 +251,16 @@ export default class BudgetItemForm extends Component {
 								</Col>
 							</Row>
 							<Row>
-								{/*<Col xs={9}>
-									<SelectValidator 
+								<Col xs={12}>
+									<TextValidator
 										label="Category"
-										onChange={this.handleSelectChange('category')}
+										onChange={this.handleChange('category')}
 										name="category"
 										value={this.state.category}
 										validators={['required']}
 										errorMessages={'this field is required'}
-										style={{width: "80%"}}
-									>
-										{ this.renderCategoryOptions() }
-									</SelectValidator>*/}
-									<Col xs={12}>
-										<TextValidator
-											label="Category"
-											onChange={this.handleChange('category')}
-											name="category"
-											value={this.state.category}
-											validators={['required']}
-											errorMessages={'this field is required'}
-										/>
-									</Col>
-								{/*<Col xs={3}>
-									<IconButton onClick={this.addNewCategory}><Add /></IconButton>
-								</Col>*/}
+									/>
+								</Col>
 							</Row>
 							<Row>
 								<Col xs={12}>
